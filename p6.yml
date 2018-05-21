@@ -1,0 +1,47 @@
+---
+- hosts: slave
+  gather_facts: True
+  vars:
+      mn_root: /test_files/
+      File_Loc: "{{ mn_root }}/"
+      File_Name: Flex.zip
+      Temp_File_Dest: /tmp/www/
+      Temp_Dest: /tmp/
+      War_File: Isrc.war
+  tasks:
+#   - name: list archive
+#     unarchive:
+#      list_files: yes
+#      src: "{{ File_Loc }}{{ File_Name }}"
+#      dest: "{{ Temp_Dest }}"
+#      remote_src: true
+#     register: arch_content
+
+   #- name: print content
+    # debug: msg={{ arch_content.files }}
+
+   - name: Find file in given path to extract
+     find:
+      paths: "{{ Temp_Dest }}" 
+      patterns: Isrc.war
+      recurse: true
+     register: path_content
+#     when:  War_File in  arch_content.files 
+
+   - name: debug path_content
+     #debug: msg="{{ path_content.files[0].path }}"
+     debug: msg="{{ item.path }}"
+     with_items: "{{ path_content.files }}"
+     when: path_content.matched
+     tags:
+          - ddeploy
+
+   - name : extract war file to required path
+     unarchive:
+      src: "{{ path_content.files[0].path }}"
+      dest: "{{ path_content.files[0].path|dirname }}"
+      remote_src: true
+     when: not path_content.files
+     tags: 
+          - deploy
+          

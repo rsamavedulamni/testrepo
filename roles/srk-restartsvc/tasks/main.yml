@@ -1,0 +1,9 @@
+---
+# tasks file for srk-restartsvc
+
+    - name: "{{ state }} services "
+      service :
+       name : "{{ item }}" 
+       state : "{{ state }}"
+      with_items: "{{ services }}"
+      when: ansible_hostname == "slave"

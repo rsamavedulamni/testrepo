@@ -1,0 +1,17 @@
+---
+- hosts: slave
+  gather_facts: True
+  vars:
+    servers:
+       - 10.103.65.8
+       - 10.103.65.77
+       - 10.103.65.12
+       - 10.103.65.118
+    ext_name: bob-lsperf_cloud_modeln_com
+   
+  tasks:
+    - name: copying template
+      template:
+       src: nginx1.conf
+       dest: /tmp/nginx.conf
+      with_items: servers 

@@ -1,0 +1,29 @@
+---
+- hosts: slave
+  gather_facts: True
+  vars:
+      File_Loc: /test_files/
+      File_Name: Flex.zip
+      Temp_File_Dest: /tmp/www/
+      Temp_Dest: /tmp/
+      War_File: Isrc.war
+  tasks:
+   - name: list archive
+     unarchive:
+      list_files: yes
+      src: "{{ File_Loc }}{{ File_Name }}"
+      dest: "{{ Temp_Dest }}"
+      remote_src: true
+     register: arch_content
+
+   #- name: print content
+    # debug: msg={{ arch_content.files }}
+
+   - name: extract {{ War_File }} if present to {{ Temp_File_Dest }} folder
+     unarchive:
+      src: "{{ Temp_Dest }}{{ War_File }}" 
+      dest: "{{ Temp_File_Dest }}"
+      remote_src: true
+     become: yes
+     become_user: osboxes
+     when:  War_File in  arch_content.files 

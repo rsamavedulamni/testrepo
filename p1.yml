@@ -1,0 +1,11 @@
+---
+
+- hosts: slave
+  gather_facts: true
+  vars:
+    tt:
+     - docker
+     - chronyd
+  
+  roles:
+  - { role : srk-restartsvc, services : "{{ tt }}", state: "{{ state }} " }

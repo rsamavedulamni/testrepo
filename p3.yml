@@ -1,0 +1,9 @@
+---
+- hosts: slave
+  tasks:
+   - name : dock test
+     docker_container:
+      name : webhello
+      image: hello-world
+      ports:
+         - 80:80

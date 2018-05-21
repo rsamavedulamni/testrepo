@@ -1,0 +1,17 @@
+---
+# tasks file for srk-restartsvc
+- hosts: slave
+  gather_facts : true
+  vars:
+    services:
+      - chronyd
+      - docker
+
+  tasks:
+    - name: stopping services
+      service :
+       name : "{{ item }}" 
+       state : stopped
+      with_items: "{{ services }}"
+      when: ansible_hostname != "slave"
+
